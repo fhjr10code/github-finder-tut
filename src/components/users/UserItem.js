@@ -1,4 +1,6 @@
+// Tools
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function UserItem({ user }) {
   const { login, avatar_url, html_url } = user;
@@ -11,22 +13,12 @@ function UserItem({ user }) {
           <a href={html_url}>More</a>
         </button>
       </div>
-      {/* <div>
-        <div className='flex flex-col max-w-md bg-white px-8 py-6 rounded-xl space-y-5 items-center'>
-          <img
-            src={avatar_url}
-            alt=''
-            className='rounded-md'
-            style={{ width: '60px' }}
-          />
-          <h3 className='font-bold text-gray-800 text-lg'>{login}</h3>
-          <button className='px-4 py-2 bg-gray-900 rounded-md text-white text-md focus:border-transparent'>
-            <a href={html_url}>More</a>
-          </button>
-        </div>
-      </div> */}
     </div>
   );
 }
+
+UserItem.propTypes = {
+  user: PropTypes.object.isRequired,
+};
 
 export default UserItem;
