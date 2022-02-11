@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function UserItem({ user }) {
+const UserItem = ({ user }) => {
   const { login, avatar_url, html_url } = user;
   return (
     <div className='each mb-10 m-2 shadow-lg border-gray-800 bg-gray-100 relative'>

@@ -9,7 +9,7 @@ import Users from './components/users/Users';
 // Styles
 import './index.css';
 
-function App() {
+const App = () => {
   const [users, setUsers] = useState({
     users: [],
     loading: false,
@@ -34,6 +34,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default App;

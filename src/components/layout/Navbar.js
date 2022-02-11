@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function Navbar({ title, icon }) {
+const Navbar = ({ title, icon }) => {
   return (
     <nav className='bg-orange-400 border-gray-200 px-2 sm:px-4 py-2.5 text-xl'>
       <i className={icon}></i> {title}
