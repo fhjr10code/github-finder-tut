@@ -4,6 +4,7 @@ import axios from 'axios';
 
 // Components
 import Navbar from './components/layout/Navbar';
+import Search from './components/users/Search';
 import Users from './components/users/Users';
 
 // Styles
@@ -15,21 +16,35 @@ const App = () => {
     loading: false,
   });
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   setUsers({ loading: true });
+
+  //   const getUsers = async () => {
+  //     const res = await axios.get(
+  //       `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+  //     );
+  //     setUsers({ users: res.data, loading: false });
+  //   };
+
+  //   getUsers();
+  // }, []);
+
+  const searchUsers = async (text) => {
     setUsers({ loading: true });
 
-    const getUsers = async () => {
-      const res = await axios.get('https://api.github.com/users');
-      setUsers({ users: res.data, loading: false });
-    };
+    const res = await axios.get(
+      `https://api.github.com/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+    console.log(res.data.items);
 
-    getUsers();
-  }, []);
+    setUsers({ users: res.data.items, loading: false });
+  };
 
   return (
     <div>
       <Navbar title='Github Finder' icon='fa-brands fa-github' />
       <div>
+        <Search searchUsers={searchUsers} />
         <Users loading={users.loading} users={users.users} />
       </div>
     </div>
