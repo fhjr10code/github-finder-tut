@@ -1,54 +1,63 @@
 // Tools
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
 // Components
 import Navbar from './components/layout/Navbar';
 import Search from './components/users/Search';
 import Users from './components/users/Users';
+import Alert from './components/layout/Alert';
 
 // Styles
 import './index.css';
 
 const App = () => {
-  const [users, setUsers] = useState({
-    users: [],
-    loading: false,
-  });
+	const [users, setUsers] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const [alerts, setAlerts] = useState(null);
 
-  // useEffect(() => {
-  //   setUsers({ loading: true });
+	// Search for users in github and place them in state
+	const searchUsers = async text => {
+		setLoading(true);
 
-  //   const getUsers = async () => {
-  //     const res = await axios.get(
-  //       `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-  //     );
-  //     setUsers({ users: res.data, loading: false });
-  //   };
+		const res = await axios.get(
+			`https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+		);
 
-  //   getUsers();
-  // }, []);
+		setUsers(res.data.items);
+		setLoading(false);
+	};
 
-  const searchUsers = async (text) => {
-    setUsers({ loading: true });
+	// Clear users from state
+	const clearUsers = () => {
+		setUsers([]);
+		setLoading(false);
+	};
 
-    const res = await axios.get(
-      `https://api.github.com/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-    );
-    console.log(res.data.items);
+	// Alert user of an error
+	const setAlert = (msg, type) => {
+		setAlerts(alerts => {
+			return { ...alerts, msg: msg, type: type };
+		});
 
-    setUsers({ users: res.data.items, loading: false });
-  };
+		setTimeout(() => setAlerts(null), 3000);
+	};
 
-  return (
-    <div>
-      <Navbar title='Github Finder' icon='fa-brands fa-github' />
-      <div>
-        <Search searchUsers={searchUsers} />
-        <Users loading={users.loading} users={users.users} />
-      </div>
-    </div>
-  );
+	return (
+		<div>
+			<Navbar title='Github Finder' icon='fa-brands fa-github' />
+			<div>
+				<Alert alerts={alerts} />
+				<Search
+					searchUsers={searchUsers}
+					clearUsers={clearUsers}
+					showClear={users.length > 0 ? true : false}
+					setAlert={setAlert}
+				/>
+				<Users loading={loading} users={users} />
+			</div>
+		</div>
+	);
 };
 
 export default App;
