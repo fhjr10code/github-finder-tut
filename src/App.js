@@ -11,6 +11,7 @@ import Navbar from './components/layout/Navbar';
 import Search from './components/users/Search';
 import Users from './components/users/Users';
 import Alert from './components/layout/Alert';
+import User from './components/users/User';
 
 // Styles
 import './index.css';
@@ -19,6 +20,7 @@ const App = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [alerts, setAlerts] = useState(null);
+  const [user, setUser] = useState([]);
 
   // Search for users in github and place them in state
   const searchUsers = async (text) => {
@@ -29,6 +31,18 @@ const App = () => {
     );
 
     setUsers(res.data.items);
+    setLoading(false);
+  };
+
+  // Search for a single Github user and place them in state
+  const getUser = async (username) => {
+    setLoading(true);
+
+    const res = await axios.get(
+      `https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+
+    setUser(res.data);
     setLoading(false);
   };
 
@@ -69,6 +83,10 @@ const App = () => {
               }
             />
             <Route path='/about' element={<About />} />
+            <Route
+              path='/users/:login'
+              element={<User getUser={getUser} user={user} loading={loading} />}
+            />
           </Routes>
         </div>
       </div>
