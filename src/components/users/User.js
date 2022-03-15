@@ -5,8 +5,9 @@ import PropTypes from 'prop-types';
 
 // Components
 import Spinner from '../layout/Spinner';
+import Repos from '../repos/Repos';
 
-const User = ({ getUser, user, loading }) => {
+const User = ({ getUser, user, loading, getUserRepos, repos }) => {
   const { login } = useParams();
   const {
     name,
@@ -25,6 +26,7 @@ const User = ({ getUser, user, loading }) => {
 
   useEffect(() => {
     getUser(login);
+    getUserRepos(login);
   }, []);
 
   if (loading) return <Spinner />;
@@ -39,7 +41,7 @@ const User = ({ getUser, user, loading }) => {
       )}
       <div>
         <div>
-          <img src={avatar_url} alt='profile image' />
+          <img src={avatar_url} alt='profile' />
           <h1>{name}</h1>
           <p>Location: {location}</p>
         </div>
@@ -78,14 +80,16 @@ const User = ({ getUser, user, loading }) => {
         <div>Public Repos: {public_repos}</div>
         <div>Public Gists: {public_gists}</div>
       </div>
+      <Repos repos={repos} />
     </Fragment>
   );
 };
 
 User.propTypes = {
   getUser: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
   loading: PropTypes.bool.isRequired,
+  getUserRepos: PropTypes.func.isRequired,
+  repos: PropTypes.array.isRequired,
 };
 
 export default User;
